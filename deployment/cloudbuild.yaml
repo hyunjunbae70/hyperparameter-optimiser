@@ -1,0 +1,30 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/hyperparameter-optimiser:$COMMIT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/hyperparameter-optimiser:latest'
+      - '-f'
+      - 'deployment/Dockerfile'
+      - '.'
+    timeout: '1200s'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/hyperparameter-optimiser:$COMMIT_SHA'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/hyperparameter-optimiser:latest'
+
+images:
+  - 'gcr.io/$PROJECT_ID/hyperparameter-optimiser:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/hyperparameter-optimiser:latest'
+
+options:
+  machineType: 'N1_HIGHCPU_8'
+  timeout: '1800s'

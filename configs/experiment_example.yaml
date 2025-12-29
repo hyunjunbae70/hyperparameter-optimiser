@@ -1,0 +1,29 @@
+evolution:
+  population_size: 20
+  num_generations: 10
+  crossover_rate: 0.8
+  mutation_rate: 0.2
+  elite_size: 2
+
+training:
+  max_epochs: 20
+  early_stopping_patience: 3
+  device: cpu
+
+parallel:
+  num_workers: 4
+
+data:
+  data_dir: ./data
+  val_split: 0.1
+
+fitness:
+  w_accuracy: 1.0
+  w_stability: 0.15
+  w_runtime: 0.03
+  reference_time: 80.0
+
+experiment:
+  name: quick_experiment
+  output_dir: results
+  use_cache: true

@@ -1,0 +1,33 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: hyperparameter-optimiser
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/maxScale: '1'
+        autoscaling.knative.dev/minScale: '0'
+    spec:
+      containerConcurrency: 1
+      timeoutSeconds: 3600
+      containers:
+        - image: gcr.io/PROJECT_ID/hyperparameter-optimiser:latest
+          resources:
+            limits:
+              cpu: '4'
+              memory: 8Gi
+          env:
+            - name: EXPERIMENT_NAME
+              value: "cloudrun_experiment"
+            - name: GCS_BUCKET
+              value: "YOUR_GCS_BUCKET_NAME"
+            - name: GOOGLE_CLOUD_PROJECT
+              value: "YOUR_PROJECT_ID"
+          args:
+            - "--experiment-name"
+            - "$(EXPERIMENT_NAME)"
+            - "--generations"
+            - "10"
+            - "--population-size"
+            - "20"

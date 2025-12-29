@@ -1,0 +1,29 @@
+evolution:
+  population_size: 30
+  num_generations: 20
+  crossover_rate: 0.8
+  mutation_rate: 0.2
+  elite_size: 3
+
+training:
+  max_epochs: 30
+  early_stopping_patience: 5
+  device: cpu
+
+parallel:
+  num_workers: null
+
+data:
+  data_dir: ./data
+  val_split: 0.1
+
+fitness:
+  w_accuracy: 1.0
+  w_stability: 0.1
+  w_runtime: 0.05
+  reference_time: 100.0
+
+experiment:
+  name: cifar10_hpo
+  output_dir: results
+  use_cache: true
