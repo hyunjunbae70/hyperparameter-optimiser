@@ -1,6 +1,8 @@
 # Hyperparameter Optimisation Engine
 
-An evolutionary hyperparameter search system with custom mutation/crossover operators for mixed discrete-continuous spaces, multi-objective fitness optimisation, and cloud deployment capabilities.
+*Personal project demonstrating software engineering skills for internship applications. Built to show end-to-end system design, from evolutionary algorithms to cloud deployment.*
+
+An evolutionary hyperparameter search system for PyTorch models using custom genetic operators, multi-objective fitness, and parallel evaluation. Optimises CIFAR-10 CNN architectures with mixed discrete-continuous hyperparameter spaces.
 
 ## Features
 
@@ -211,38 +213,16 @@ gcloud config set project $PROJECT_ID
 
 Results are automatically uploaded to Google Cloud Storage when running on Cloud Run.
 
-## Performance & Compute Savings
+## Design Goals
 
-### Comparison with Baselines
+This project demonstrates:
+- **Evolutionary algorithms**: Custom genetic operators for mixed parameter spaces
+- **Parallel systems**: Multiprocessing with async evaluation and caching
+- **Multi-objective optimisation**: Balancing accuracy, stability, and runtime
+- **End-to-end deployment**: From local development to containerised cloud deployment
+- **Clean architecture**: Modular design with proper separation of concerns
 
-Based on CIFAR-10 optimisation:
-
-| Method | Accuracy | Compute Time | Evaluations |
-|--------|----------|--------------|-------------|
-| Manual Baseline | ~75% | 1.5 GPU-hours | 1 |
-| Grid Search | ~80% | 50+ GPU-hours | 100+ |
-| **Evolutionary (this)** | **~82%** | **~15 GPU-hours** | **30-50** |
-
-**Key Achievements:**
-- 7% improvement over manual baseline
-- 70% reduction in compute vs grid search
-- Discovers optimal architectures automatically
-- Multi-objective optimisation balances accuracy/efficiency
-
-### Example Best Configuration Found
-
-```yaml
-learning_rate: 0.00234
-optimiser: AdamW
-batch_size: 128
-dropout_rate: 0.18
-num_layers: 4
-base_channels: 64
-weight_decay: 0.00012
-momentum: 0.9
-```
-
-Achieved: 82.3% validation accuracy with training stability variance of 0.04
+The system is designed to show how evolutionary search can explore hyperparameter spaces more efficiently than grid search, with proper caching and parallel evaluation reducing redundant computation.
 
 ## Development
 
@@ -312,33 +292,17 @@ Ensure you're in the project root and Dockerfile path is correct:
 docker build -t hpo -f deployment/Dockerfile .
 ```
 
-## Contributing
+## Learning Resources
 
-Contributions welcome! Areas for improvement:
-- Additional search spaces (NLP, RL)
-- Advanced operators (adaptive mutation, differential evolution)
-- Distributed evaluation (Ray, Dask)
-- Web dashboard for experiment tracking
+Built while learning about:
+- Genetic algorithms and evolutionary computation
+- Multi-objective optimisation techniques
+- PyTorch model training and hyperparameter tuning
+- Docker containerisation and cloud deployment (GCP)
+- Parallel programming with Python multiprocessing
 
-## License
-
-MIT License - see LICENSE file
-
-## Citation
-
-If you use this code in your research, please cite:
-
-```bibtex
-@software{hyperparameter_optimiser,
-  title={Evolutionary Hyperparameter Optimisation Engine},
-  author={Your Name},
-  year={2025},
-  url={https://github.com/yourusername/hyperparameter-optimiser}
-}
-```
-
-## Acknowledgments
+## References
 
 - CIFAR-10 dataset: https://www.cs.toronto.edu/~kriz/cifar.html
-- PyTorch team for the deep learning framework
-- Inspired by genetic algorithms and multi-objective optimisation research
+- PyTorch documentation: https://pytorch.org/docs/
+- Deb & Agrawal (1995): Simulated Binary Crossover for continuous search spaces
