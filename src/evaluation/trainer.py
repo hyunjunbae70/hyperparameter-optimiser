@@ -33,7 +33,7 @@ class ModelTrainer:
         self.device = torch.device(device)
 
     def train_epoch(self, model: nn.Module, train_loader: DataLoader,
-                    optimiser: torch.optim.Optimiser, criterion: nn.Module) -> Tuple[float, float]:
+                    optimiser: torch.optim.Optimizer, criterion: nn.Module) -> Tuple[float, float]:
         model.train()
         running_loss = 0.0
         correct = 0
@@ -83,7 +83,7 @@ class ModelTrainer:
         return val_loss, val_acc
 
     def train(self, model: nn.Module, train_loader: DataLoader, val_loader: DataLoader,
-              optimiser: torch.optim.Optimiser, scheduler: torch.optim.lr_scheduler._LRScheduler,
+              optimiser: torch.optim.Optimizer, scheduler: torch.optim.lr_scheduler._LRScheduler,
               num_epochs: int = 30, early_stopping_patience: int = 5) -> Dict[str, Any]:
         model = model.to(self.device)
         criterion = nn.CrossEntropyLoss()

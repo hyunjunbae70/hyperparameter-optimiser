@@ -3,6 +3,7 @@ import json
 import time
 from typing import Dict, Any, List
 from src.search_space.hyperparameters import HyperparameterSpace
+from src.optimiser.individual import _json_default
 from src.optimiser.population import Population
 from src.optimiser.operators import GeneticOperators
 from src.parallel.evaluator import ParallelEvaluator
@@ -137,7 +138,7 @@ class EvolutionaryOptimiser:
             'history': self.history
         }
         with open(checkpoint_file, 'w') as f:
-            json.dump(checkpoint, f, indent=2)
+            json.dump(checkpoint, f, indent=2, default=_json_default)
 
 
 from src.optimiser.individual import Individual

@@ -22,7 +22,7 @@ class ModelBuilder:
         return model
 
     @staticmethod
-    def build_optimiser(model: nn.Module, config: Dict[str, Any]) -> optim.Optimiser:
+    def build_optimiser(model: nn.Module, config: Dict[str, Any]) -> optim.Optimizer:
         optimiser_name = config.get('optimiser', 'Adam')
         learning_rate = config.get('learning_rate', 0.001)
         weight_decay = config.get('weight_decay', 1e-4)
@@ -60,7 +60,7 @@ class ModelBuilder:
         return optimiser
 
     @staticmethod
-    def build_scheduler(optimiser: optim.Optimiser, config: Dict[str, Any]) -> optim.lr_scheduler._LRScheduler:
+    def build_scheduler(optimiser: optim.Optimizer, config: Dict[str, Any]) -> optim.lr_scheduler._LRScheduler:
         scheduler = optim.lr_scheduler.ReduceLROnPlateau(
             optimiser,
             mode='min',

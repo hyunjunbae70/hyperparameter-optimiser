@@ -3,6 +3,18 @@ import json
 from typing import Dict, Any, Optional
 from copy import deepcopy
 
+import numpy as np
+
+
+def _json_default(obj):
+    if isinstance(obj, np.integer):
+        return int(obj)
+    if isinstance(obj, np.floating):
+        return float(obj)
+    if isinstance(obj, np.ndarray):
+        return obj.tolist()
+    raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
+
 
 class Individual:
     def __init__(self, config: Dict[str, Any], generation: int = 0):
@@ -19,7 +31,7 @@ class Individual:
         return self._config_hash
 
     def _compute_hash(self) -> str:
-        config_str = json.dumps(self.config, sort_keys=True)
+        config_str = json.dumps(self.config, sort_keys=True, default=_json_default)
         return hashlib.sha256(config_str.encode()).hexdigest()
 
     def set_fitness(self, fitness: float, metrics: Optional[Dict[str, Any]] = None):
