@@ -8,9 +8,9 @@ from src.models.cifar_net import ConfigurableCIFARNet
 class ModelBuilder:
     @staticmethod
     def build_model(config: Dict[str, Any]) -> nn.Module:
-        num_layers = config.get('num_layers', 3)
-        base_channels = config.get('base_channels', 64)
-        dropout_rate = config.get('dropout_rate', 0.2)
+        num_layers = int(config.get('num_layers', 3))
+        base_channels = int(config.get('base_channels', 64))
+        dropout_rate = float(config.get('dropout_rate', 0.2))
 
         model = ConfigurableCIFARNet(
             num_layers=num_layers,
@@ -24,9 +24,9 @@ class ModelBuilder:
     @staticmethod
     def build_optimiser(model: nn.Module, config: Dict[str, Any]) -> optim.Optimizer:
         optimiser_name = config.get('optimiser', 'Adam')
-        learning_rate = config.get('learning_rate', 0.001)
-        weight_decay = config.get('weight_decay', 1e-4)
-        momentum = config.get('momentum', 0.9)
+        learning_rate = float(config.get('learning_rate', 0.001))
+        weight_decay = float(config.get('weight_decay', 1e-4))
+        momentum = float(config.get('momentum', 0.9))
 
         if optimiser_name == 'SGD':
             optimiser = optim.SGD(

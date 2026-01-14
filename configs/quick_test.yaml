@@ -1,0 +1,14 @@
+evolution:
+  population_size: 3
+  num_generations: 2
+  crossover_rate: 0.8
+  mutation_rate: 0.2
+  elite_size: 1
+
+training:
+  max_epochs: 5
+  early_stopping_patience: 2
+  device: cpu
+
+parallel:
+  num_workers: 1

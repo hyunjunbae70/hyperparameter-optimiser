@@ -3,6 +3,7 @@ import csv
 import os
 from datetime import datetime
 from typing import Dict, Any, List
+from src.optimiser.individual import _json_default
 
 
 class ExperimentLogger:
@@ -29,12 +30,12 @@ class ExperimentLogger:
         }
 
         with open(self.jsonl_file, 'a') as f:
-            f.write(json.dumps(entry) + '\n')
+            f.write(json.dumps(entry, default=_json_default) + '\n')
 
     def save_final_results(self, result: Dict[str, Any]):
         result_file = os.path.join(self.experiment_dir, 'final_result.json')
         with open(result_file, 'w') as f:
-            json.dump(result, f, indent=2)
+            json.dump(result, f, indent=2, default=_json_default)
 
     def save_best_config(self, config: Dict[str, Any], metrics: Dict[str, Any]):
         config_file = os.path.join(self.experiment_dir, 'best_config.json')
@@ -44,7 +45,7 @@ class ExperimentLogger:
             'timestamp': datetime.now().isoformat()
         }
         with open(config_file, 'w') as f:
-            json.dump(data, f, indent=2)
+            json.dump(data, f, indent=2, default=_json_default)
 
     def export_to_csv(self, history: Dict[str, List]):
         with open(self.csv_file, 'w', newline='') as f:

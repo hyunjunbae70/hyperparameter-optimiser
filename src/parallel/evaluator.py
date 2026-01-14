@@ -49,23 +49,39 @@ class ParallelEvaluator:
 
         if verbose and self.use_cache:
             print(f"Cache hits: {self.cache_hits}, Cache misses: {self.cache_misses}, "
-                  f"Evaluating: {len(to_evaluate)}")
+                  f"Evaluating: {len(to_evaluate)}", flush=True)
+
+        if verbose:
+            print(f"DEBUG: Starting evaluation loop with {self.num_workers} worker(s)...", flush=True)
 
         if to_evaluate:
             configs = [ind.config for ind in to_evaluate]
+            args_list = [(config, self.data_dir, self.max_epochs, self.device)
+                         for config in configs]
 
-            with Pool(processes=self.num_workers) as pool:
-                args_list = [(config, self.data_dir, self.max_epochs, self.device)
-                             for config in configs]
-
-                if verbose:
-                    results = []
-                    with tqdm(total=len(args_list), desc="Evaluating") as pbar:
-                        for result in pool.starmap(evaluate_individual_worker, args_list):
-                            results.append(result)
-                            pbar.update(1)
-                else:
-                    results = pool.starmap(evaluate_individual_worker, args_list)
+            # Use sequential evaluation when num_workers=1 (avoids multiprocessing issues on WSL)
+            if self.num_workers == 1:
+                results = []
+                for i, args in enumerate(args_list):
+                    if verbose:
+                        print(f"\nIndividual {i+1}/{len(args_list)}:", flush=True)
+                    result = evaluate_individual_worker(*args, verbose=verbose)
+                    results.append(result)
+                    if verbose:
+                        if result['success']:
+                            print(f"  -> Fitness: {result['result']['fitness']:.4f}", flush=True)
+                        else:
+                            print(f"  -> Error: {result['error']}", flush=True)
+            else:
+                with Pool(processes=self.num_workers) as pool:
+                    if verbose:
+                        results = []
+                        with tqdm(total=len(args_list), desc="Evaluating") as pbar:
+                            for result in pool.starmap(evaluate_individual_worker, args_list):
+                                results.append(result)
+                                pbar.update(1)
+                    else:
+                        results = pool.starmap(evaluate_individual_worker, args_list)
 
             for ind, result in zip(to_evaluate, results):
                 if result['success']:

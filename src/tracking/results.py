@@ -2,6 +2,7 @@ import json
 import os
 import torch
 from typing import Dict, Any
+from src.optimiser.individual import _json_default
 
 
 class ResultsManager:
@@ -17,13 +18,13 @@ class ResultsManager:
     def save_training_history(self, history: Dict[str, Any], filename: str = 'training_history.json'):
         history_path = os.path.join(self.experiment_dir, filename)
         with open(history_path, 'w') as f:
-            json.dump(history, f, indent=2)
+            json.dump(history, f, indent=2, default=_json_default)
         return history_path
 
     def save_hyperparameters(self, config: Dict[str, Any], filename: str = 'hyperparameters.json'):
         config_path = os.path.join(self.experiment_dir, filename)
         with open(config_path, 'w') as f:
-            json.dump(config, f, indent=2)
+            json.dump(config, f, indent=2, default=_json_default)
         return config_path
 
     def load_results(self) -> Dict[str, Any]:

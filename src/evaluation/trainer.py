@@ -84,7 +84,8 @@ class ModelTrainer:
 
     def train(self, model: nn.Module, train_loader: DataLoader, val_loader: DataLoader,
               optimiser: torch.optim.Optimizer, scheduler: torch.optim.lr_scheduler._LRScheduler,
-              num_epochs: int = 30, early_stopping_patience: int = 5) -> Dict[str, Any]:
+              num_epochs: int = 30, early_stopping_patience: int = 5,
+              verbose: bool = False) -> Dict[str, Any]:
         model = model.to(self.device)
         criterion = nn.CrossEntropyLoss()
 
@@ -116,7 +117,12 @@ class ModelTrainer:
             history['val_acc'].append(val_acc)
             history['epochs_trained'] = epoch + 1
 
+            if verbose:
+                print(f"  Epoch {epoch+1}/{num_epochs} - Loss: {train_loss:.4f} - Val Acc: {val_acc*100:.1f}%", flush=True)
+
             if early_stopping(val_loss):
+                if verbose:
+                    print(f"  Early stopping at epoch {epoch+1}", flush=True)
                 break
 
         training_time = time.time() - start_time

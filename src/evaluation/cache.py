@@ -1,6 +1,7 @@
 import json
 import os
 from typing import Dict, Any, Optional
+from src.optimiser.individual import _json_default
 
 
 class EvaluationCache:
@@ -23,7 +24,7 @@ class EvaluationCache:
     def _save_cache(self):
         os.makedirs(os.path.dirname(self.cache_file), exist_ok=True)
         with open(self.cache_file, 'w') as f:
-            json.dump(self.cache, f, indent=2)
+            json.dump(self.cache, f, indent=2, default=_json_default)
 
     def get(self, config_hash: str) -> Optional[Dict[str, Any]]:
         return self.cache.get(config_hash)
