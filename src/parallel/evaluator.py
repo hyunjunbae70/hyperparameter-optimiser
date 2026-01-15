@@ -7,7 +7,7 @@ from src.parallel.worker import evaluate_individual_worker
 
 
 class ParallelEvaluator:
-    def __init__(self, num_workers: int = None, data_dir: str = './data',
+    def __init__(self, num_workers: int = 1, data_dir: str = './data',
                  max_epochs: int = 30, device: str = 'cpu',
                  use_cache: bool = True, cache_file: str = 'results/eval_cache.json'):
         if num_workers is None:

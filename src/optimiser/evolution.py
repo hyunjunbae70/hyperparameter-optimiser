@@ -12,7 +12,7 @@ from src.parallel.evaluator import ParallelEvaluator
 class EvolutionaryOptimiser:
     def __init__(self, population_size: int = 30, num_generations: int = 20,
                  crossover_rate: float = 0.8, mutation_rate: float = 0.2,
-                 elite_size: int = 3, num_workers: int = None,
+                 elite_size: int = 3, num_workers: int = 1,
                  data_dir: str = './data', max_epochs: int = 30,
                  device: str = 'cpu', checkpoint_dir: str = 'results/checkpoints'):
 

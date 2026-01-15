@@ -42,7 +42,7 @@ hyperparameter-optimiser/
 ### Local Installation
 
 ```bash
-git clone https://github.com/yourusername/hyperparameter-optimiser.git
+git clone https://github.com/hyunjunbae70/hyperparameter-optimiser.git
 cd hyperparameter-optimiser
 # inside venv (create, then 'source venv/bin/activate')
 pip install -r requirements.txt
