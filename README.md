@@ -55,8 +55,7 @@ pip install -e .
 ```bash
 docker build -t hyperparameter-optimiser -f deployment/Dockerfile .
 
-docker run -v $(pwd)/results:/app/results hyperparameter-optimiser \
-  --generations 10 --population-size 20
+docker run -v $(pwd)/results:/app/results hyperparameter-optimiser --generations 10 --population-size 20
 ```
 
 ## Quick Start
@@ -287,7 +286,7 @@ python src/main.py --max-epochs 15 --early-stopping-patience 3
 ```
 
 **Docker Build Fails:**
-Ensure you're in the project root and Dockerfile path is correct:
+Ensure you have permissions, are in the project root and Dockerfile path is correct:
 ```bash
 docker build -t hpo -f deployment/Dockerfile .
 ```
