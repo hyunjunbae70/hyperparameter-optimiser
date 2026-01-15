@@ -1,21 +1,25 @@
 import os
 from typing import Optional
+
 try:
     from google.cloud import storage
+
     GCS_AVAILABLE = True
 except ImportError:
     GCS_AVAILABLE = False
 
 
 class GCSUploader:
-    def __init__(self, bucket_name: Optional[str] = None, project_id: Optional[str] = None):
+    def __init__(
+        self, bucket_name: Optional[str] = None, project_id: Optional[str] = None
+    ):
         if not GCS_AVAILABLE:
             print("Warning: google-cloud-storage not available. GCS upload disabled.")
             self.enabled = False
             return
 
-        self.bucket_name = bucket_name or os.getenv('GCS_BUCKET')
-        self.project_id = project_id or os.getenv('GOOGLE_CLOUD_PROJECT')
+        self.bucket_name = bucket_name or os.getenv("GCS_BUCKET")
+        self.project_id = project_id or os.getenv("GOOGLE_CLOUD_PROJECT")
 
         if not self.bucket_name:
             print("Warning: No GCS bucket specified. GCS upload disabled.")

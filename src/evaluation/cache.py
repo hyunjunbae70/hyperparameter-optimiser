@@ -5,7 +5,7 @@ from src.optimiser.individual import _json_default
 
 
 class EvaluationCache:
-    def __init__(self, cache_file: str = 'results/eval_cache.json'):
+    def __init__(self, cache_file: str = "results/eval_cache.json"):
         self.cache_file = cache_file
         self.cache: Dict[str, Dict[str, Any]] = {}
         self._load_cache()
@@ -13,7 +13,7 @@ class EvaluationCache:
     def _load_cache(self):
         if os.path.exists(self.cache_file):
             try:
-                with open(self.cache_file, 'r') as f:
+                with open(self.cache_file, "r") as f:
                     self.cache = json.load(f)
             except (json.JSONDecodeError, IOError):
                 self.cache = {}
@@ -23,7 +23,7 @@ class EvaluationCache:
 
     def _save_cache(self):
         os.makedirs(os.path.dirname(self.cache_file), exist_ok=True)
-        with open(self.cache_file, 'w') as f:
+        with open(self.cache_file, "w") as f:
             json.dump(self.cache, f, indent=2, default=_json_default)
 
     def get(self, config_hash: str) -> Optional[Dict[str, Any]]:
@@ -45,13 +45,6 @@ class EvaluationCache:
 
     def get_statistics(self) -> Dict[str, Any]:
         if not self.cache:
-            return {
-                'total_evaluations': 0,
-                'cache_hits': 0,
-                'cache_size': 0
-            }
+            return {"total_evaluations": 0, "cache_hits": 0, "cache_size": 0}
 
-        return {
-            'total_evaluations': len(self.cache),
-            'cache_size': len(self.cache)
-        }
+        return {"total_evaluations": len(self.cache), "cache_size": len(self.cache)}

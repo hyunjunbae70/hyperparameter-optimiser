@@ -17,9 +17,7 @@ class GeneticOperators:
         for param_name in self.search_space.get_all_params():
             if np.random.random() < self.mutation_rate:
                 mutated_config[param_name] = self._mutate_param(
-                    param_name,
-                    mutated_config[param_name],
-                    generation
+                    param_name, mutated_config[param_name], generation
                 )
 
         mutated_config = self.search_space.validate_config(mutated_config)
@@ -27,7 +25,7 @@ class GeneticOperators:
 
     def _mutate_param(self, param_name: str, value: Any, generation: int) -> Any:
         param_info = self.search_space.get_param_info(param_name)
-        param_type = param_info['type']
+        param_type = param_info["type"]
 
         if param_type == ParamType.CONTINUOUS:
             return self._gaussian_mutation(param_name, value, generation)
@@ -36,10 +34,12 @@ class GeneticOperators:
         else:
             raise ValueError(f"Unknown parameter type: {param_type}")
 
-    def _gaussian_mutation(self, param_name: str, value: float, generation: int) -> float:
+    def _gaussian_mutation(
+        self, param_name: str, value: float, generation: int
+    ) -> float:
         param_info = self.search_space.get_param_info(param_name)
-        min_val, max_val = param_info['range']
-        is_log_scale = param_info.get('log_scale', False)
+        min_val, max_val = param_info["range"]
+        is_log_scale = param_info.get("log_scale", False)
 
         decay_factor = 1.0 / (1.0 + 0.01 * generation)
 
@@ -48,7 +48,7 @@ class GeneticOperators:
             log_min, log_max = np.log10(min_val), np.log10(max_val)
             sigma = (log_max - log_min) * 0.1 * decay_factor
             new_log_value = log_value + np.random.normal(0, sigma)
-            new_value = 10 ** new_log_value
+            new_value = 10**new_log_value
         else:
             sigma = (max_val - min_val) * 0.1 * decay_factor
             new_value = value + np.random.normal(0, sigma)
@@ -57,20 +57,22 @@ class GeneticOperators:
 
     def _uniform_mutation(self, param_name: str, value: Any) -> Any:
         param_info = self.search_space.get_param_info(param_name)
-        choices = param_info['choices']
+        choices = param_info["choices"]
 
         other_choices = [c for c in choices if c != value]
         if other_choices:
             return np.random.choice(other_choices)
         return value
 
-    def crossover(self, parent1: Individual, parent2: Individual, generation: int) -> Tuple[Individual, Individual]:
+    def crossover(
+        self, parent1: Individual, parent2: Individual, generation: int
+    ) -> Tuple[Individual, Individual]:
         child1_config = {}
         child2_config = {}
 
         for param_name in self.search_space.get_all_params():
             param_info = self.search_space.get_param_info(param_name)
-            param_type = param_info['type']
+            param_type = param_info["type"]
 
             p1_value = parent1.config[param_name]
             p2_value = parent2.config[param_name]
@@ -86,13 +88,16 @@ class GeneticOperators:
         child1_config = self.search_space.validate_config(child1_config)
         child2_config = self.search_space.validate_config(child2_config)
 
-        return (Individual(child1_config, generation),
-                Individual(child2_config, generation))
+        return (
+            Individual(child1_config, generation),
+            Individual(child2_config, generation),
+        )
 
-    def _sbx_crossover(self, param_name: str, p1_value: float, p2_value: float,
-                       eta: float = 15.0) -> Tuple[float, float]:
+    def _sbx_crossover(
+        self, param_name: str, p1_value: float, p2_value: float, eta: float = 15.0
+    ) -> Tuple[float, float]:
         param_info = self.search_space.get_param_info(param_name)
-        min_val, max_val = param_info['range']
+        min_val, max_val = param_info["range"]
 
         if abs(p1_value - p2_value) < 1e-9:
             return p1_value, p2_value
@@ -121,11 +126,20 @@ class GeneticOperators:
         else:
             return p2_value, p1_value
 
-    def tournament_selection(self, population: List[Individual], k: int = 3) -> Individual:
-        tournament = np.random.choice(population, size=min(k, len(population)), replace=False)
-        return max(tournament, key=lambda ind: ind.fitness if ind.fitness is not None else float('-inf'))
+    def tournament_selection(
+        self, population: List[Individual], k: int = 3
+    ) -> Individual:
+        tournament = np.random.choice(
+            population, size=min(k, len(population)), replace=False
+        )
+        return max(
+            tournament,
+            key=lambda ind: ind.fitness if ind.fitness is not None else float("-inf"),
+        )
 
-    def select_parents(self, population: List[Individual], num_pairs: int) -> List[Tuple[Individual, Individual]]:
+    def select_parents(
+        self, population: List[Individual], num_pairs: int
+    ) -> List[Tuple[Individual, Individual]]:
         pairs = []
         for _ in range(num_pairs):
             parent1 = self.tournament_selection(population)

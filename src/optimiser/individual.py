@@ -42,7 +42,7 @@ class Individual:
     def is_evaluated(self) -> bool:
         return self.fitness is not None
 
-    def copy(self) -> 'Individual':
+    def copy(self) -> "Individual":
         new_individual = Individual(self.config, self.generation)
         if self.is_evaluated():
             new_individual.set_fitness(self.fitness, self.metrics)
@@ -50,18 +50,18 @@ class Individual:
 
     def to_dict(self) -> Dict[str, Any]:
         return {
-            'config': self.config,
-            'generation': self.generation,
-            'fitness': self.fitness,
-            'metrics': self.metrics,
-            'config_hash': self.config_hash
+            "config": self.config,
+            "generation": self.generation,
+            "fitness": self.fitness,
+            "metrics": self.metrics,
+            "config_hash": self.config_hash,
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'Individual':
-        individual = cls(data['config'], data.get('generation', 0))
-        if data.get('fitness') is not None:
-            individual.set_fitness(data['fitness'], data.get('metrics', {}))
+    def from_dict(cls, data: Dict[str, Any]) -> "Individual":
+        individual = cls(data["config"], data.get("generation", 0))
+        if data.get("fitness") is not None:
+            individual.set_fitness(data["fitness"], data.get("metrics", {}))
         return individual
 
     def __repr__(self) -> str:
@@ -76,7 +76,7 @@ class Individual:
     def __hash__(self) -> int:
         return int(self.config_hash[:16], 16)
 
-    def __lt__(self, other: 'Individual') -> bool:
+    def __lt__(self, other: "Individual") -> bool:
         if self.fitness is None:
             return False
         if other.fitness is None:

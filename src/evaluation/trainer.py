@@ -29,11 +29,16 @@ class EarlyStopping:
 
 
 class ModelTrainer:
-    def __init__(self, device: str = 'cpu'):
+    def __init__(self, device: str = "cpu"):
         self.device = torch.device(device)
 
-    def train_epoch(self, model: nn.Module, train_loader: DataLoader,
-                    optimiser: torch.optim.Optimizer, criterion: nn.Module) -> Tuple[float, float]:
+    def train_epoch(
+        self,
+        model: nn.Module,
+        train_loader: DataLoader,
+        optimiser: torch.optim.Optimizer,
+        criterion: nn.Module,
+    ) -> Tuple[float, float]:
         model.train()
         running_loss = 0.0
         correct = 0
@@ -58,8 +63,9 @@ class ModelTrainer:
 
         return epoch_loss, epoch_acc
 
-    def validate(self, model: nn.Module, val_loader: DataLoader,
-                 criterion: nn.Module) -> Tuple[float, float]:
+    def validate(
+        self, model: nn.Module, val_loader: DataLoader, criterion: nn.Module
+    ) -> Tuple[float, float]:
         model.eval()
         running_loss = 0.0
         correct = 0
@@ -82,27 +88,36 @@ class ModelTrainer:
 
         return val_loss, val_acc
 
-    def train(self, model: nn.Module, train_loader: DataLoader, val_loader: DataLoader,
-              optimiser: torch.optim.Optimizer, scheduler: torch.optim.lr_scheduler._LRScheduler,
-              num_epochs: int = 30, early_stopping_patience: int = 5,
-              verbose: bool = False) -> Dict[str, Any]:
+    def train(
+        self,
+        model: nn.Module,
+        train_loader: DataLoader,
+        val_loader: DataLoader,
+        optimiser: torch.optim.Optimizer,
+        scheduler: torch.optim.lr_scheduler._LRScheduler,
+        num_epochs: int = 30,
+        early_stopping_patience: int = 5,
+        verbose: bool = False,
+    ) -> Dict[str, Any]:
         model = model.to(self.device)
         criterion = nn.CrossEntropyLoss()
 
         early_stopping = EarlyStopping(patience=early_stopping_patience)
 
         history = {
-            'train_loss': [],
-            'train_acc': [],
-            'val_loss': [],
-            'val_acc': [],
-            'epochs_trained': 0
+            "train_loss": [],
+            "train_acc": [],
+            "val_loss": [],
+            "val_acc": [],
+            "epochs_trained": 0,
         }
 
         start_time = time.time()
 
         for epoch in range(num_epochs):
-            train_loss, train_acc = self.train_epoch(model, train_loader, optimiser, criterion)
+            train_loss, train_acc = self.train_epoch(
+                model, train_loader, optimiser, criterion
+            )
 
             val_loss, val_acc = self.validate(model, val_loader, criterion)
 
@@ -111,14 +126,17 @@ class ModelTrainer:
             else:
                 scheduler.step()
 
-            history['train_loss'].append(train_loss)
-            history['train_acc'].append(train_acc)
-            history['val_loss'].append(val_loss)
-            history['val_acc'].append(val_acc)
-            history['epochs_trained'] = epoch + 1
+            history["train_loss"].append(train_loss)
+            history["train_acc"].append(train_acc)
+            history["val_loss"].append(val_loss)
+            history["val_acc"].append(val_acc)
+            history["epochs_trained"] = epoch + 1
 
             if verbose:
-                print(f"  Epoch {epoch+1}/{num_epochs} - Loss: {train_loss:.4f} - Val Acc: {val_acc*100:.1f}%", flush=True)
+                print(
+                    f"  Epoch {epoch+1}/{num_epochs} - Loss: {train_loss:.4f} - Val Acc: {val_acc*100:.1f}%",
+                    flush=True,
+                )
 
             if early_stopping(val_loss):
                 if verbose:
@@ -126,13 +144,13 @@ class ModelTrainer:
                 break
 
         training_time = time.time() - start_time
-        history['training_time'] = training_time
+        history["training_time"] = training_time
 
-        history['best_val_acc'] = max(history['val_acc'])
-        history['best_val_loss'] = min(history['val_loss'])
-        history['final_val_acc'] = history['val_acc'][-1]
-        history['final_val_loss'] = history['val_loss'][-1]
+        history["best_val_acc"] = max(history["val_acc"])
+        history["best_val_loss"] = min(history["val_loss"])
+        history["final_val_acc"] = history["val_acc"][-1]
+        history["final_val_loss"] = history["val_loss"][-1]
 
-        history['val_loss_std'] = np.std(history['val_loss'])
+        history["val_loss_std"] = np.std(history["val_loss"])
 
         return history

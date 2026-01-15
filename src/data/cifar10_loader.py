@@ -5,7 +5,7 @@ from src.data.transforms import get_train_transforms, get_test_transforms
 
 
 class CIFAR10DataLoader:
-    def __init__(self, data_dir: str = './data', val_split: float = 0.1):
+    def __init__(self, data_dir: str = "./data", val_split: float = 0.1):
         self.data_dir = data_dir
         self.val_split = val_split
         self.train_dataset = None
@@ -17,7 +17,7 @@ class CIFAR10DataLoader:
             root=self.data_dir,
             train=True,
             download=True,
-            transform=get_train_transforms()
+            transform=get_train_transforms(),
         )
 
         val_size = int(len(full_train_dataset) * self.val_split)
@@ -26,25 +26,24 @@ class CIFAR10DataLoader:
         self.train_dataset, val_dataset_temp = random_split(
             full_train_dataset,
             [train_size, val_size],
-            generator=torch.Generator().manual_seed(42)
+            generator=torch.Generator().manual_seed(42),
         )
 
         self.test_dataset = CIFAR10(
             root=self.data_dir,
             train=False,
             download=True,
-            transform=get_test_transforms()
+            transform=get_test_transforms(),
         )
 
         val_transform = get_test_transforms()
         val_dataset_indices = val_dataset_temp.indices
         val_base_dataset = CIFAR10(
-            root=self.data_dir,
-            train=True,
-            download=False,
-            transform=val_transform
+            root=self.data_dir, train=True, download=False, transform=val_transform
         )
-        self.val_dataset = torch.utils.data.Subset(val_base_dataset, val_dataset_indices)
+        self.val_dataset = torch.utils.data.Subset(
+            val_base_dataset, val_dataset_indices
+        )
 
     def get_train_loader(self, batch_size: int, num_workers: int = 2) -> DataLoader:
         if self.train_dataset is None:
@@ -55,7 +54,7 @@ class CIFAR10DataLoader:
             batch_size=batch_size,
             shuffle=True,
             num_workers=num_workers,
-            pin_memory=True
+            pin_memory=True,
         )
 
     def get_val_loader(self, batch_size: int, num_workers: int = 2) -> DataLoader:
@@ -67,7 +66,7 @@ class CIFAR10DataLoader:
             batch_size=batch_size,
             shuffle=False,
             num_workers=num_workers,
-            pin_memory=True
+            pin_memory=True,
         )
 
     def get_test_loader(self, batch_size: int, num_workers: int = 2) -> DataLoader:
@@ -79,7 +78,7 @@ class CIFAR10DataLoader:
             batch_size=batch_size,
             shuffle=False,
             num_workers=num_workers,
-            pin_memory=True
+            pin_memory=True,
         )
 
     @property

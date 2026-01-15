@@ -68,29 +68,31 @@ class Population:
 
         if len(self.individuals) < self.size:
             remaining = self.size - len(self.individuals)
-            self.individuals.extend(new_individuals[num_to_replace:num_to_replace + remaining])
+            self.individuals.extend(
+                new_individuals[num_to_replace : num_to_replace + remaining]
+            )
 
     def get_statistics(self) -> dict:
         evaluated = self.get_evaluated()
         if not evaluated:
             return {
-                'size': len(self.individuals),
-                'evaluated': 0,
-                'best_fitness': None,
-                'mean_fitness': None,
-                'std_fitness': None,
-                'worst_fitness': None
+                "size": len(self.individuals),
+                "evaluated": 0,
+                "best_fitness": None,
+                "mean_fitness": None,
+                "std_fitness": None,
+                "worst_fitness": None,
             }
 
         fitnesses = [ind.fitness for ind in evaluated]
         return {
-            'size': len(self.individuals),
-            'evaluated': len(evaluated),
-            'best_fitness': max(fitnesses),
-            'mean_fitness': np.mean(fitnesses),
-            'std_fitness': np.std(fitnesses),
-            'worst_fitness': min(fitnesses),
-            'generation': self.generation
+            "size": len(self.individuals),
+            "evaluated": len(evaluated),
+            "best_fitness": max(fitnesses),
+            "mean_fitness": np.mean(fitnesses),
+            "std_fitness": np.std(fitnesses),
+            "worst_fitness": min(fitnesses),
+            "generation": self.generation,
         }
 
     def increment_generation(self):

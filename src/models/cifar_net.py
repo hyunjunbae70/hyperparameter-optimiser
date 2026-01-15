@@ -4,8 +4,13 @@ import torch.nn.functional as F
 
 
 class ConfigurableCIFARNet(nn.Module):
-    def __init__(self, num_layers: int = 3, base_channels: int = 64,
-                 dropout_rate: float = 0.2, num_classes: int = 10):
+    def __init__(
+        self,
+        num_layers: int = 3,
+        base_channels: int = 64,
+        dropout_rate: float = 0.2,
+        num_classes: int = 10,
+    ):
         super(ConfigurableCIFARNet, self).__init__()
 
         self.num_layers = num_layers
@@ -27,7 +32,9 @@ class ConfigurableCIFARNet(nn.Module):
 
             if i < num_layers - 1:
                 self.conv_layers.append(
-                    nn.Conv2d(current_channels, current_channels, kernel_size=3, padding=1)
+                    nn.Conv2d(
+                        current_channels, current_channels, kernel_size=3, padding=1
+                    )
                 )
                 self.bn_layers.append(nn.BatchNorm2d(current_channels))
                 self.pool_layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
